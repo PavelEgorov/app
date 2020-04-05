@@ -26,6 +26,8 @@ class GlideImageLoader(val cacheImage: IImageCache) : IImageLoader<ImageView> {
                     target: Target<Bitmap>,
                     isFirstResource: Boolean
                 ): Boolean {
+                    /// При загрузке столкнулся с проблемой. Фон становиться темным. Скорее всего требуется указать доп параметры.
+                    //TODO: Разобраться с черным фоном при загрузке файла
                     cacheImage.LoadImage(url).subscribe({
                         Glide.with(container.context)
                             .asBitmap()
