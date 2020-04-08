@@ -24,6 +24,7 @@ class ImageModule {
 
     /// TODO: почему-то данный вариант не работает.. Предполагаю, что проблема в дженерике. Нужно разобраться
     /// точнее работает, но не так как хотелось бы.. Ошибки нет. Но картинку не подтягивает
+    /// а ещё нужно его в отдельный модуль вытащить
 //    @Provides
 //    fun imageLoader(imageCache: IImageCache):GlideImageLoader{
 //        return GlideImageLoader(imageCache)
