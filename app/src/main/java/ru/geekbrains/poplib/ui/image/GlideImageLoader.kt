@@ -10,8 +10,11 @@ import com.bumptech.glide.request.target.Target
 import ru.geekbrains.poplib.mvp.model.cache.image.IImageCache
 import ru.geekbrains.poplib.mvp.model.image.IImageLoader
 import timber.log.Timber
+import javax.inject.Inject
 
-class GlideImageLoader(val cacheImage: IImageCache) : IImageLoader<ImageView> {
+class GlideImageLoader : IImageLoader<ImageView> {
+    @Inject lateinit var cacheImage: IImageCache
+
     override fun loadInto(url: String, container: ImageView) {
         //Проверять наличие сети
 
@@ -26,9 +29,7 @@ class GlideImageLoader(val cacheImage: IImageCache) : IImageLoader<ImageView> {
                     target: Target<Bitmap>,
                     isFirstResource: Boolean
                 ): Boolean {
-                    /// При загрузке столкнулся с проблемой. Фон становиться темным. Скорее всего требуется указать доп параметры.
-                    //TODO: Разобраться с черным фоном при загрузке файла
-                    cacheImage.LoadImage(url).subscribe({
+                   cacheImage.LoadImage(url).subscribe({
                         Glide.with(container.context)
                             .asBitmap()
                             .load(it)

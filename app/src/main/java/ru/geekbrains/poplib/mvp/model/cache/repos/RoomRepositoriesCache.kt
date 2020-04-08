@@ -8,8 +8,6 @@ import ru.geekbrains.poplib.mvp.model.entity.room.RoomGithubRepository
 import ru.geekbrains.poplib.mvp.model.entity.room.db.Database
 import java.lang.RuntimeException
 
-///Для базы данных напрашивается тоже интерфейс.. Или Room сам решает данную проблему? (нужно почитать/спросить)
-//TODO: Нужно разобраться. Хотя Database это абстрактный класс, по этому он может иметь различные реализации.
 class RoomRepositoriesCache(val database: Database) : IRepositoriesCache {
     override fun cacheRepository(userLogin: String, repository: List<GithubRepository>) = Completable.create {
         repository.takeIf {

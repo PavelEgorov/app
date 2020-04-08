@@ -10,6 +10,7 @@ import ru.geekbrains.poplib.R
 import ru.geekbrains.poplib.mvp.presenter.list.IRepositoryListPresenter
 import ru.geekbrains.poplib.mvp.view.list.RepositoryItemView
 
+/// Инжектить IRepositoryListPresenter я не буду т.к. он передается от презентера, хотя возможно это ошибка.
 class RepositoriesRVAdapter(val presenter: IRepositoryListPresenter) : RecyclerView.Adapter<RepositoriesRVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
