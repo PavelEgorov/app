@@ -1,12 +1,8 @@
 package ru.geekbrains.poplib.ui.file
 
-import android.R.attr.bitmap
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Bitmap.CompressFormat
 import ru.geekbrains.poplib.mvp.model.file.IFileManager
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 

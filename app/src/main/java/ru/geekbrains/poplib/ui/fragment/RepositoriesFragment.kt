@@ -11,21 +11,14 @@ import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.geekbrains.poplib.R
-import ru.geekbrains.poplib.mvp.model.api.ApiHolder
-import ru.geekbrains.poplib.mvp.model.cache.image.RoomImageCache
-import ru.geekbrains.poplib.mvp.model.cache.repos.RoomRepositoriesCache
-import ru.geekbrains.poplib.mvp.model.cache.user.RoomUserCache
 import ru.geekbrains.poplib.mvp.model.entity.room.db.Database
-import ru.geekbrains.poplib.mvp.model.repo.GithubRepositoriesRepo
-import ru.geekbrains.poplib.mvp.model.repo.GithubUsersRepo
 import ru.geekbrains.poplib.mvp.presenter.RepositoriesPresenter
 import ru.geekbrains.poplib.mvp.view.RepositoriesView
 import ru.geekbrains.poplib.ui.App
 import ru.geekbrains.poplib.ui.BackButtonListener
 import ru.geekbrains.poplib.ui.adapter.RepositoriesRVAdapter
-import ru.geekbrains.poplib.ui.file.FileManager
 import ru.geekbrains.poplib.ui.image.GlideImageLoader
-import ru.geekbrains.poplib.ui.network.AndroidNetworkStatus
+import javax.inject.Inject
 
 
 class RepositoriesFragment : MvpAppCompatFragment(), RepositoriesView, BackButtonListener {
@@ -38,23 +31,22 @@ class RepositoriesFragment : MvpAppCompatFragment(), RepositoriesView, BackButto
     @InjectPresenter
     lateinit var presenter: RepositoriesPresenter
 
+    /// TODO: вариант ниже у меня не отрабатывает как нужно. По этому я добавил GlideImageLoader в AppComponent
+    /// Хотя правильнее на мой взгляд разобраться почему не работает вариант ниже и реализовать через него
+    /// @Inject lateinit var imageLoader: IImageLoader<ImageView>
     lateinit var imageLoader: GlideImageLoader
+    @Inject lateinit var database: Database
 
     var adapter: RepositoriesRVAdapter? = null
-
-    val networkStatus = AndroidNetworkStatus(App.instance)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         View.inflate(context, R.layout.fragment_repositories, null)
 
 
     @ProvidePresenter
-    fun providePresenter() = RepositoriesPresenter(
-        AndroidSchedulers.mainThread(),
-        App.instance.router,
-        GithubRepositoriesRepo(ApiHolder.api, networkStatus, RoomRepositoriesCache(Database.getInstance())),
-        GithubUsersRepo(ApiHolder.api, networkStatus, RoomUserCache(Database.getInstance()))
-    )
+    fun providePresenter() = RepositoriesPresenter(AndroidSchedulers.mainThread()).apply {
+        App.instance.appComponent.inject(this)
+    }
 
 
     override fun init() {
@@ -62,7 +54,9 @@ class RepositoriesFragment : MvpAppCompatFragment(), RepositoriesView, BackButto
         adapter = RepositoriesRVAdapter(presenter.repositoryListPresenter)
         rv_repos.adapter = adapter
 
-        imageLoader  = GlideImageLoader(RoomImageCache(Database.getInstance(), FileManager(context)))
+        imageLoader  = GlideImageLoader().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun updateList() {

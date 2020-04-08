@@ -9,11 +9,13 @@ import ru.geekbrains.poplib.mvp.model.entity.room.RoomGithubImage
 import ru.geekbrains.poplib.mvp.model.entity.room.db.Database
 import ru.geekbrains.poplib.mvp.model.file.IFileManager
 import timber.log.Timber
+import javax.inject.Inject
 
 class RoomImageCache(
     val database: Database,
     val fileManager: IFileManager
 ) : IImageCache {
+
     override fun cacheImage(url: String, bitmap: Bitmap) = Completable.create {
         val localPath = fileManager.saveBitmapIntoFile(
             bitmap,
@@ -31,7 +33,7 @@ class RoomImageCache(
     }.subscribeOn(Schedulers.io())
 
     override fun LoadImage(url: String) = Single.create<ByteArray> { emiter ->
-        Database.getInstance().imageDao.findByUrl(url)?.let {
+        database.imageDao.findByUrl(url)?.let {
             emiter.onSuccess(
                 fileManager.loadBitmapIntoByteArray(it.localPath)
             )
